@@ -24,6 +24,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		630BC99921D395B2009AC66B /* kanjistructure.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = kanjistructure.h; sourceTree = "<group>"; };
+		630BC99A21D395EC009AC66B /* kanjigame.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = kanjigame.h; sourceTree = "<group>"; };
+		630BC99D21D3973D009AC66B /* drawkanji.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = drawkanji.h; sourceTree = "<group>"; };
+		630BC99E21D398BA009AC66B /* utilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utilities.h; sourceTree = "<group>"; };
 		E42962AC2163EDD300A6A9E2 /* ofCamera.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ofCamera.cpp; path = ../../../libs/openFrameworks/3d/ofCamera.cpp; sourceTree = SOURCE_ROOT; };
 		E42962AD2163EDD300A6A9E2 /* ofMesh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ofMesh.h; path = ../../../libs/openFrameworks/3d/ofMesh.h; sourceTree = SOURCE_ROOT; };
 		E42962AE2163EDD300A6A9E2 /* ofNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ofNode.h; path = ../../../libs/openFrameworks/3d/ofNode.h; sourceTree = SOURCE_ROOT; };
@@ -532,6 +536,10 @@
 			children = (
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */,
+				630BC99E21D398BA009AC66B /* utilities.h */,
+				630BC99D21D3973D009AC66B /* drawkanji.h */,
+				630BC99921D395B2009AC66B /* kanjistructure.h */,
+				630BC99A21D395EC009AC66B /* kanjigame.h */,
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
 			);
 			path = src;
