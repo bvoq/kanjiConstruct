@@ -24,6 +24,7 @@ struct KanjiSymbol {
     string kanjiStr; //if no image, it's the kanji, elsewise it's the adress of the image of the kanji
     ofImage kanjiImg;
     string translation;
+    string str1, str2; // in case the translation is too big it is usually split among multiple
 };
 struct Kanji {
     string loc; //location of html in file system
@@ -35,6 +36,7 @@ struct Kanji {
     
     //for the game
     bool selected = false;
+    bool expanded = false;
     bool known = false;
     vector<Kanji*> discoveredBuiltFrom;
 };
@@ -51,6 +53,19 @@ int noToArr(int i) {
     if(i >= 584) i--;
     i--; // zero indexed
     return i;
+}
+
+string replStr(string str) {
+    string ostr = "";
+    for(int i=0; i<str.size(); ++i) {
+        if(i+4 <= str.size() && str.substr(i,4) == "&lt;") {
+            ostr += "<";
+            i+=3;
+            continue;
+        }
+        ostr.push_back(str[i]);
+    }
+    return ostr;
 }
 
 vector<Kanji> kanjis;
@@ -80,12 +95,11 @@ vector<Kanji> initKanjis(string path) {
 
         assert(a != kanjis[i].loc.size());
         assert(b != kanjis[i].loc.size());
-        cout << kanjis[i].loc << endl;
+
         assert(b-a-1 > 0);
         kanjis[i].no = noToArr( stoi( kanjis[i].loc.substr(a+1,b-a-1) ) ); // go to zero for simplicity
-        cout << kanjis[i].no << endl;
         
-        
+        cout << "loading " << kanjis[i].loc << endl;
         string fullhtml = ofBufferFromFile(kanjis[i].loc).getText();
         
         //find better translation
@@ -98,7 +112,7 @@ vector<Kanji> initKanjis(string path) {
         size_t endkanjisymbol = fullhtml.find("</span>", startkanjisymbol);
         
         string kanjisymbol = fullhtml.substr(startkanjisymbol + 17, endkanjisymbol-(startkanjisymbol+17));
-        mainSymbol.kanjiStr = kanjisymbol;
+        mainSymbol.kanjiStr = replStr(kanjisymbol);
         //this is either a kanji or a kanjidamage original. the original has to be loaded as an image.
         mainSymbol.hasUnicodeString = !(kanjisymbol.size() > 4 && (kanjisymbol.substr(0,4) == "<img"));
         
@@ -128,12 +142,12 @@ vector<Kanji> initKanjis(string path) {
                     auto mutantImgEnd = fullhtml.find("\"",mutantImgStart);
                     //string mutantImg = "radsmall" + fullhtml.substr(mutantImgStart+14,mutantImgEnd-(mutantImgStart+14));
                     string mutantImg = fullhtml.substr(mutantImgStart,mutantImgEnd-mutantImgStart);
-                    mutant.kanjiStr = mutantImg;
+                    mutant.kanjiStr = replStr(mutantImg);
                     cout << "loading " << mutantImg << endl;
                     mutant.kanjiImg.load(mutantImg);
                 } else {
                     mutant.hasUnicodeString = true;
-                    mutant.kanjiStr = mutantStr;
+                    mutant.kanjiStr = replStr(mutantStr);
                 }
                 mutantit = fullhtml.find("<td>", mutantit+1);
                 auto endofmutanttranslation = fullhtml.find("</td>",mutantit);
@@ -217,7 +231,7 @@ vector<Kanji> initKanjis(string path) {
     int counter = 0;
     for(int i = 0; i < kanjis.size(); ++i) {
         if(kanjis[i].consists.size() == 0) {
-            cout << kanjis[i].no << " " << kanjis[i].repres.front().translation << endl;
+            cout << kanjis[i].no << " " << kanjis[i].repres.front().translation << " " << kanjis[i].loc << endl;
             counter++;
         }
     }

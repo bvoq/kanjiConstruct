@@ -23,6 +23,7 @@ void removeSelectedKanji(Kanji* p) {
     p->selected = false;
 }
 void insertSelectedKanji(Kanji* p) {
+    cout << "selected: " << p->repres.front().translation;
     selectedKanji.insert(p);
     p->selected = true;
 }
@@ -30,7 +31,7 @@ void insertSelectedKanji(Kanji* p) {
 void initKanjiGame() {
     kanjiTree.clear();
     //add the first 5 undividable elements
-    for(int i=0;i<kanjis.size() && kanjiTree.size() < 50;++i) {
+    for(int i=0;i<kanjis.size();++i) {
         if(kanjis[i].consists.size() == 0) {
             kanjis[i].known = true;
             kanjiTree.push_back(&kanjis[i]);
@@ -65,10 +66,14 @@ void drawKanjiGame() {
     int mx = ofGetAppPtr()->mouseX;
     int my = ofGetAppPtr()->mouseY;
     
+    int currentI = 0, layerI = 0;
+    vector<int> sizeOfLayer = {45,43,39,36,33,30,27,24,21};
     for(int i=0;i<kanjiTree.size();++i) {
-        float angle = i*2*M_PI/kanjiTree.size();
-        int px = cx + scale/2.*sin(angle);
-        int py = cy + scale/2.*cos(angle) + charW();
+        float angle = (i-currentI)*2*M_PI/(MIN(kanjiTree.size()-currentI,sizeOfLayer[layerI]));
+        float radius = scale/2. - layerI * charW()*3;
+        
+        int px = cx + radius*sin(angle);
+        int py = cy + radius*cos(angle) + charW();
         
         
         int w = printEntireKanjiWithMeaningCompact(px,py, kanjiTree[i]->no) - px;
@@ -96,6 +101,12 @@ void drawKanjiGame() {
             }
             
         }
+        
+        
+        if(((i+1)-currentI) % sizeOfLayer[layerI] == 0) {
+            currentI = i+1;
+            layerI++;
+        }
     }
     
     int checkIndex = checkMatch();
@@ -113,6 +124,9 @@ void drawKanjiGame() {
         if(mx >= box.getMinX() && mx <= box.getMaxX() && my >= box.getMinY() && my <= box.getMaxY()) {
             ofSetColor(0,255,0,0);
             if(mouseFirstPressed) {
+                for(Kanji* e : selectedKanji) {
+                    e->discoveredBuiltFrom.push_back(&kanjis[checkIndex]);
+                }
                 kanjiTree.push_back(&kanjis[checkIndex]);
                 kanjis[checkIndex].known = true;
             }

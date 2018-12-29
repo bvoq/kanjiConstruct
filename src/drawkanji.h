@@ -66,8 +66,10 @@ int printKanjiWithMeaningCompact(int x, int y, int no, int repr) {
     int w=0,h=0;
     if(kanjis[no].repres[repr].hasUnicodeString) {
         ofSetColor(0);
-        w = font.stringWidth(kanjis[no].repres[repr].kanjiStr);
-        h = font.stringHeight(kanjis[no].repres[repr].kanjiStr);
+        
+        auto bound = font.getStringBoundingBox(kanjis[no].repres[repr].kanjiStr,x,y);
+        w = bound.getWidth();
+        h = abs(bound.getHeight());
         font.drawString(kanjis[no].repres[repr].kanjiStr, x, y);
         
     } else {
@@ -89,48 +91,51 @@ int printKanjiWithMeaningCompact(int x, int y, int no, int repr) {
     if(sw > w && sw > charW()) {
         //search for space first
         int mid = str.size()/2;
-        string str1, str2;
+        
+        if(kanjis[no].repres[repr].str1.size() == 0) {
+        
         for(int i=0;i<mid/2;++i) {
             if(!(str[mid+i] >= 'A' && str[mid+i] <= 'Z')&&!(str[mid+i] >= 'a' && str[mid+i] <= 'z') ) {
-                str1 = str.substr(0,mid+i);
-                if(str[mid+i] == ' ') str2 = str.substr(mid+i+1);
-                else str2 = str.substr(mid+i);
+                kanjis[no].repres[repr].str1 = str.substr(0,mid+i);
+                if(str[mid+i] == ' ') kanjis[no].repres[repr].str2 = str.substr(mid+i+1);
+                else kanjis[no].repres[repr].str2 = str.substr(mid+i);
                 break;
             }
             if(!(str[mid-i] >= 'A' && str[mid-i] <= 'Z')&&!(str[mid-i] >= 'a' && str[mid-i] <= 'z') ) {
-                str1 = str.substr(0,mid-i);
-                if(str[mid-i] == ' ') str2 = str.substr(mid-i+1);
-                else str2 = str.substr(mid-i);
+                kanjis[no].repres[repr].str1= str.substr(0,mid-i);
+                if(str[mid-i] == ' ') kanjis[no].repres[repr].str2 = str.substr(mid-i+1);
+                else kanjis[no].repres[repr].str2 = str.substr(mid-i);
                 break;
             }
         }
         
-        if(str1.size() == 0) {
+        if(kanjis[no].repres[repr].str1.size() == 0) {
         for(int i=0;i<mid/2;++i) {
             if(str[mid+i] != 'a' && str[mid+i] != 'e' && str[mid+i] != 'i' && str[mid+i] != 'o' && str[mid+i] != 'u') {
                 if(str[mid+i+1] == 'a' || str[mid+i+1] == 'e' || str[mid+i+1] == 'i' || str[mid+i+1] == 'o' || str[mid+i+1] == 'u') {
-                    str1 = str.substr(0,mid+i) + "-";
-                    str2 = str.substr(mid+i);
+                    kanjis[no].repres[repr].str1 = str.substr(0,mid+i) + "-";
+                    kanjis[no].repres[repr].str2 = str.substr(mid+i);
                     break;
                 }
             }
             if(str[mid-i] != 'a' && str[mid-i] != 'e' && str[mid-i] != 'i' && str[mid-i] != 'o' && str[mid-i] != 'u') {
                 if(str[mid-i+1] == 'a' || str[mid-i+1] == 'e' || str[mid-i+1] == 'i' || str[mid-i+1] == 'o' || str[mid-i+1] == 'u') {
-                    str1 = str.substr(0,mid-i) + "-";
-                    str2 = str.substr(mid-i);
+                    kanjis[no].repres[repr].str1 = str.substr(0,mid-i) + "-";
+                    kanjis[no].repres[repr].str2 = str.substr(mid-i);
                     break;
                 }
             }
         }
         }
+        }
         ofSetColor(0);
-        int sw1 = fontSmall.stringWidth(str1);
-        int sw2 = fontSmall.stringWidth(str2);
-        if(sw1 > w) fontSmall.drawString(str1, x,y-h-sh);
-        else fontSmall.drawString(str1, x+(w-sw1)/2,y-h-sh);
+        int sw1 = fontSmall.stringWidth(kanjis[no].repres[repr].str1);
+        int sw2 = fontSmall.stringWidth(kanjis[no].repres[repr].str2);
+        if(sw1 > w) fontSmall.drawString(kanjis[no].repres[repr].str1, x,y-h-sh);
+        else fontSmall.drawString(kanjis[no].repres[repr].str1, x+(w-sw1)/2,y-h-sh);
         
-        if(sw2 > w) fontSmall.drawString(str2, x,y-h);
-        else fontSmall.drawString(str2, x+(w-sw2)/2,y-h);
+        if(sw2 > w) fontSmall.drawString(kanjis[no].repres[repr].str2, x,y-h);
+        else fontSmall.drawString(kanjis[no].repres[repr].str2, x+(w-sw2)/2,y-h);
         sw = max(sw1,sw2);
     }
     else {
