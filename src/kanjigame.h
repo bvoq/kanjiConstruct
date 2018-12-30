@@ -32,7 +32,7 @@ void initKanjiGame() {
     kanjiTree.clear();
     //add the first 5 undividable elements
     for(int i=0;i<kanjis.size();++i) {
-        if(kanjis[i].consists.size() == 0) {
+        if(kanjis[i].consists.size() == 0 && i != 1764) {
             kanjis[i].known = true;
             kanjiTree.push_back(&kanjis[i]);
         }
@@ -67,7 +67,7 @@ void drawKanjiGame() {
     int my = ofGetAppPtr()->mouseY;
     
     int currentI = 0, layerI = 0;
-    vector<int> sizeOfLayer = {45,43,39,36,33,30,27,24,21};
+    vector<int> sizeOfLayer = {45,43,39,18,18,18,18,18,18,18,18,18,18};
     for(int i=0;i<kanjiTree.size();++i) {
         float angle = (i-currentI)*2*M_PI/(MIN(kanjiTree.size()-currentI,sizeOfLayer[layerI]));
         float radius = scale/2. - layerI * charW()*3;

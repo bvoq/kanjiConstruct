@@ -175,6 +175,7 @@ vector<Kanji> initKanjis(string path) {
             if(builtfromstr.size() > 7 && builtfromstr.substr(0,7) == "../tags") continue; //skip
             
             int builtfrom = noToArr( stoi( builtfromstr ) );
+            if(builtfrom == 1764) continue; // SKIP THE GLITCH Kanji
             kanjis[i].consists.push_back(builtfrom);
             
             size_t exactComponent = fullhtml.find("component\">", arefmention);
