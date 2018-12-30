@@ -82,17 +82,19 @@ void drawKanjiGame() {
         if(selectedKanji.size() > 0 && selectedKanji.count(kanjiTree[i])==0) {
             bool foundOne = false;
             for(int e : kanjiTree[i]->canConstruct) {
-                int countNo = 0;
-                for(int f : kanjis[e].consists) {
-                    if(kanjiTreeSet.count(&kanjis[f]) == 0) {
-                        countNo = 0;
+                if(kanjis[e].known == false) {
+                    int countNo = 0;
+                    for(int f : kanjis[e].consists) {
+                        if(kanjiTreeSet.count(&kanjis[f]) == 0) {
+                            countNo = 0;
+                            break;
+                        }
+                        if(selectedKanji.count(&kanjis[f])>0) countNo++;
+                    }
+                    if(countNo == selectedKanji.size()) {
+                        foundOne = true;
                         break;
                     }
-                    if(selectedKanji.count(&kanjis[f])>0) countNo++;
-                }
-                if(countNo == selectedKanji.size()) {
-                    foundOne = true;
-                    break;
                 }
             }
             if(!foundOne) canDisplay = false;
@@ -151,9 +153,15 @@ void drawKanjiGame() {
                 for(Kanji* e : selectedKanji) {
                     e->discoveredBuiltFrom.push_back(&kanjis[checkIndex]);
                 }
+                //bam insert new kanji!
                 kanjiTree.push_back(&kanjis[checkIndex]);
                 kanjiTreeSet.insert(&kanjis[checkIndex]);
                 kanjis[checkIndex].known = true;
+                
+                //if no other kanjis match then unselect all
+                int checkIndex = checkMatch();
+                while(checkIndex == -1 && selectedKanji.size() > 0)
+                    removeSelectedKanji(*selectedKanji.begin());
             }
         }
         
