@@ -32,6 +32,8 @@ struct Kanji {
     vector<int> consists; //consists out of the following numbers
     vector<int> consistsWhichMutant;
     
+    vector<int> canConstruct;
+    
     vector<KanjiSymbol> repres;
     
     //for the game
@@ -177,6 +179,7 @@ vector<Kanji> initKanjis(string path) {
             int builtfrom = noToArr( stoi( builtfromstr ) );
             if(builtfrom == 1764) continue; // SKIP THE GLITCH Kanji
             kanjis[i].consists.push_back(builtfrom);
+            kanjis[builtfrom].canConstruct.push_back(i);
             
             size_t exactComponent = fullhtml.find("component\">", arefmention);
             size_t endOfComponent = fullhtml.find("</a>", exactComponent);
