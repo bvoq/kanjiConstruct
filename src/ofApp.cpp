@@ -7,6 +7,8 @@ bool mouseIsReleased = false;
 int mouseX = -1000;
 int mouseY = -1000;
 
+#include <string>
+
 #include "utilities.h"
 #include "kanjistructure.h"
 #include "drawkanji.h"
