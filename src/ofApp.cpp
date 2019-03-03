@@ -19,6 +19,8 @@ int mouseY = -1000;
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    ofSetDataPathRoot("../Resources/");
+    
     // init kanjis
     initKanjis("kanjiList");
     // init font
